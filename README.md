@@ -1,186 +1,505 @@
-<img src='images/collage-1b.jpg'>
+# **Thông Tin Dự Án**
 
-##### Môn: CS114.K21
-# **Machine Learning Capstone: Phát hiện và phân loại biển báo giao thông phổ biến trong Làng Đại học**
-###
-### Tổng quan
-Ngày nay, cơ sở hạ tầng giao thông ngày càng phát triển, việc phát hiện biển báo để cung cấp thông tin đến người tham gia giao thông là một điều rất quan trọng. Tận dụng những kiến thức đã được học ở môn Machine Learning, kết hợp với những điều gần gũi với đời sống. Nhóm chúng em đã chọn đề tài “Phát hiện các loại biển báo giao thông phổ biến ở Làng Đại học” làm đề tài nghiên cứu. Giúp mọi người có thể hiểu đâu là biển báo giao thông và chúng có ý nghĩa thế nào.
+> **Tên Dự Án**: Nhận diện biển báo giao thông
+> 
+**Tên nhóm:** Hội người cao tuổi
 
-### Mô tả  bài toán:
-1. Input: Một bức ảnh có chứa biển báo bất kỳ.
-2. Output: Ảnh input với bounding box khoanh vùng có biển báo và tên biển báo
+**Ngày thực hiện:** 14/05/2024
+> 
 
-<img src='images/2.jpg'> <img src='images/1.jpg'>
+**Repostories Github:** https://github.com/SmrfHdl/Machine-Learning-Project---UET-.git
 
-### Để xây dựng được mô hình như yêu cầu bài toán đó, ta cần phải trải qua 2 bước:
-1. Tìm biển báo(*).
-2. Phân loại biển báo(* *).
+# **Các thành viên của nhóm:**
 
-###
----
-###
-## Phát hiện biển báo:
-1. Quét bức ảnh input bằng một cửa sổ trượt từ trái sang phải và từ trên xuống dưới.
-2. Trích xuất đặc trưng ở mỗi vùng scan qua trên hình.
-3.	Sử dụng model phân loại biển báo(* *) để dựng đoán xem vùng đó có chứa biển báo hay không.
-4.	Tổng hợp lại các vùng có chứa biển báo thỏa mãn để có một vùng duy nhất (Final bounding boxes) 
+| Họ tên | MSSV |
+| --- | --- |
+| Nguyễn Viết Vũ (Trưởng nhóm) | 22022632 |
+| Phạm Văn Trường | 22022564 |
+| Trần An Thắng | 22022525 |
 
-### Xây dựng Scanner
-Để có thể tìm được vật thể chúng ta cần tìm, ta cần phải quét toàn bộ trên bức hình. Vì vật thể có thể nằm bất cứ đâu trên hình và có kích thước ngẫu nhiên. Cho nên chúng ta cần xây dụng “scanner” theo 2 tiêu chí sau:
-- Kích thước ảnh quét: Ta cần phải quét trên bức ảnh với nhiều kích thước khác nhau để có thể tìm ra được vật thể. Gọi tắt là kỹ thuật “Image Pyramid”.
+</aside>
 
-<img src='images/3.png'>
+# 1. Tổng quan về dự án
 
-- Phạm vi quét: Ta cần phải quét phạm vi toàn bức ảnh. Cho nên cần xây dựng một cửa sổ trượt để quét lần lượt toàn bộ bức ảnh theo chiều từ trên xuống và trái sang phải.(Sliding window)
+## 1.1. Tổng quan
 
-<img src='images/sliding_window_example.gif'>
+Ngày nay, cơ sở hạ tầng giao thông ngày càng phát triển, việc phát hiện biển báo để cung cấp thông tin đến người tham gia giao thông là một điều rất quan trọng. Tận dụng những kiến thức đã được học ở môn Machine Learning, kết hợp với những điều gần gũi với đời sống. Nhóm tôi đã chọn đề tài “Phát hiện các loại biển báo giao thông” làm đề tài nghiên cứu. Giúp mọi người có thể hiểu đâu là biển báo giao thông và chúng có ý nghĩa thế nào.
 
-### Trích xuất đặc trưng ở mỗi vùng scan trên hình
--	Ta sẽ sử dụng HOG((histogram of oriented gradients) để trích xuất đặc trưng trên những vùng mà cửa sổ trượt qua.
--	HOG là một feature descriptor được sử dụng trong computer vision và xử lý hình ảnh, dùng để detect một đối tượng. Các khái niệm về HOG được nêu ra từ năm 1986 tuy nhiên cho đến năm 2005 HOG mới được sử dụng rộng rãi sau khi Navneet Dalal và Bill Triggs công bố những bổ sung về HOG. HOG tương tự như các biểu đồ edge orientation, scale-invariant feature transform descriptors (như sift, surf ,..), shape contexts nhưng HOG được tính toán trên một lưới dày đặc các cell và chuẩn hóa sự tương phản giữa các block để nâng cao độ chính xác. HOG được sử dụng chủ yếu để mô tả hình dạng và sự xuất hiện của một object trong ảnh.
+## 1.2. Mô tả bài toán
 
-<img src='images/4.png'>
+1. Input: Một bức ảnh có chứa biển báo
+2. Output: Tên biển báo
 
-### Dự đoán đối tượng trong cửa sổ trượt
--	Ta sẽ sử dụng một model đã được train về các loại biển báo phổ biến trong làng đại học để dự đoán xem có biển báo trong cửa sổ hay không. 
--  Sau khi dự đoán, nếu có đối tượng biển báo trong hình thì ta sẽ tiến hành trả về tọa độ vị trí của đối tượng.
+# 2. Xây dựng bộ dữ liệu
 
-- Model sử dụng trong bài toán này: SVM và KNN
+Về dữ liệu, nhóm tôi sẽ sử dụng bộ dữ liệu biển báo giao thông nổi tiếng đó là German Traffic Sign.
 
-#### Support Vector Machine là gì?
-- Là thuật toán thường được áp dụng trong bài toán phân lớp, áp dụng cho cả dữ liệu tuyến tính và không tuyến tính.
-- Mục tiêu: tìm được một mặt phân cách (siêu phẳng trong không gian đa chiều) sao cho tất cả các điểm dữ liệu cùng loại đều nằm về một phía riêng biệt của mặt phân cách đó.
+Bộ dữ liệu German Traffic Sign (GTSRB) là một bộ dữ liệu chứa hình ảnh về các biển báo giao thông Đức, được sử dụng phổ biến trong lĩnh vực nhận dạng biển báo giao thông và thị giác máy tính. Bộ dữ liệu này thường được sử dụng để huấn luyện và đánh giá các mô hình học máy và mạng nơ-ron sâu trong việc nhận dạng các biển báo giao thông.
 
-<img src='images/svm.jpg'>
+## 2.1. Thông tin về bộ dữ liệu
 
-### Tổng hợp lại các khung viền
--  Trong lúc trượt cửa sổ, tùy thuộc vào bước nhảy, sẽ có nhiều cửa sổ thỏa mãn điều kiện có chứa biển báo. Cho nên chúng ta cần phải chọn ra một cửa sổ tối ưu nhất.
--  Để làm được điều đó chúng ta sẽ sử dụng kỹ thuật Non-maximum Suppression (NMS)
+Bộ dữ liệu này gồm khoảng gần 40k ảnh chia thành 43 folder là 43 loại biển báo khác nhau. Mỗi folder sẽ có 1 file CSV chứa thông tin các ảnh trong thư mục.
 
-<img src='images/3.jpg'> <img src='images/1.jpg'>
+| Nhãn | Biển tương ứng | Nhãn | Biển tương ứng | Nhãn | Biển tương ứng | Nhãn | Biển tương ứng |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 0 | Speed limit (20km/h) | 12 | Priority road | 24 | Road narrows on the right | 36 | Go straight or right |
+| 1 | Speed limit (30km/h) | 13 | Yield | 25 | Road work | 37 | Go straight or left |
+| 2 | Speed limit (50km/h) | 14 | Stop | 26 | Traffic signals | 38 | Keep right |
+| 3 | Speed limit (60km/h) | 15 | No vehicles | 27 | Pedestrians | 39 | Keep left |
+| 4 | Speed limit (70km/h) | 16 | Veh > 3.5 tons prohibited | 28 | Children crossing | 40 | Roundabout mandatory |
+| 5 | Speed limit (80km/h) | 17 | No Entry | 29 | Bicycles crossing | 41 | End of no passing |
+| 6 | End of speed limit (80km/h) | 18 | General caution | 30 | Beware of ice/snow | 42 | End no passing veh > 3.5 tons |
+| 7 | Speed limit (100km/h) | 19 | Dangerous curve left | 31 | Wild animals crossing |  |  |
+| 8 | Speed limit (120km/h) | 20 | Dangerous curve right | 32 | End speed + passing limits |  |  |
+| 9 | No passing | 21 | Double curve | 33 | Turn right ahead |  |  |
+| 10 | No passing veh over 3.5 tons | 22 | Bumpy road | 34 | Turn left ahead |  |  |
+| 11 | Right-of-way at intersection | 23 | Slippery road | 35 | Ahead only |  |  |
 
-#### Non-maximum Suppression (NMS)
-##### Input: Một danh sách B là các cửa sổ thỏa mãn, cùng với các xác suất dự đoán tương ứng và cuối cùng là ngưỡng overlap N.
-##### Output: Danh sách D các cửa sổ tối ưu cuối cùng.
-Các bước thực hiện: 
-  -	Chọn cửa sổ có xác suất dự đoán cao nhất. Xóa nó khỏi B và đưa nó vào D. 
-  -	Tính giá trị IOU(Intersection over Union)(Giá trị IOU được sử dụng để tính toán sự trùng lặp của 2 khung cửa sổ) của cửa sổ mới được chọn với những cửa sổ còn lại. Nếu giá trị IOU lớn hơn ngưỡng N thì ta sẽ xóa nó khỏi lớp B
-  -	Tiếp tục chọn cửa sổ có xác suất dự đoán cao nhất còn lại. Quay về bước 2
-  -	Lặp cho tới khi không còn giá trị nào trong B
+Dưới đây là một số thông tin chi tiết về bộ dữ liệu GTSRB:
 
-<img src='images/4.jpg'>
+- **Số Lượng Lớp**: 43 (mỗi lớp tương ứng với một loại biển báo giao thông)
+- **Kích Thước Hình Ảnh**: Đa dạng, thường là 32x32 pixel hoặc 64x64 pixel
+- **Số Lượng Hình Ảnh**: Khoảng 50,000 hình ảnh được chia thành tập huấn luyện, tập xác thực và tập kiểm thử
+- **Định Dạng Hình Ảnh**: PNG hoặc JPEG
 
-###
----
-###
-## Mô hình phân loại biển báo
+## 2.2. Đọc và xử lý dữ liệu
 
-Mô hình này mục đích là để đưa ra kết quả dự đoán xem trong cửa sổ trượt đó có biển báo hay không và chúng thuộc loại nào.
+Bởi vì tập dữ liệu ở dạng ảnh, không thể trực tiếp đưa vào model để tiến hành trainning, vì vậy tôi cần phải trích xuất những đặc trưng của ảnh. Và kỹ thuật  được sử dụng ở đây là HOG (Histograms of Oriented Gradients)
 
-### Các bước xây dựng:
-1. Thu thập dữ liệu
-2. Xử lý dữ liệu
-3. Phân chia dữ liệu Training và Testing
-4. Chọn model và training
-5. Đánh giá mô hình và nhận xét
+### 2.2.1. HOG (Histograms of Oriented Gradients)
 
-### Thu thập dữ liệu:
-Dữ liệu là những bức ảnh biển báo giao thông nhóm tự chụp bằng điện thoại. Tùy thuộc vào tần suất xuất hiện nên số ảnh ở mỗi lớp có sự chênh lệch
-Ảnh không chứa biển báo: SceneClass13 gồm 3000 tấm
+Tôi sẽ sử dụng HOG((histogram of oriented gradients) để trích xuất đặc trưng trên những vùng mà cửa sổ trượt qua.
 
-<img src='images/11.jpg'>
+Histograms of Oriented Gradients (HOG) là một kỹ thuật trích xuất đặc trưng từ hình ảnh, được sử dụng rộng rãi trong các bài toán thị giác máy tính như phát hiện đối tượng và nhận dạng mẫu. HOG được giới thiệu bởi Navneet Dalal và Bill Triggs vào năm 2005 trong bài báo "Histograms of Oriented Gradients for Human Detection".
 
-#### Số lượng
-Bao gồm 6 classes và 1 class ảnh ngoại cảnh(ảnh không chứa biển báo)
-##### Training:
-- Biển Speed limit (40km/h): 109 tấm
-- Biển W.207b sign: 108 tấm
-- Biển Pedestrians:88 tấm 
-- Biển No entry: 92 tấm
-- Biển Keep right: 66 tấm
-- Biển Roundabout mandatory: 41 tấm
-- SceneClass13: 3000 tấm(chỉ dùng 1000 tấm)
+**Nguyên lý hoạt động:**
 
-##### Testing:
-- Biển Speed limit (40km/h): 18 tấm
-- Biển W.207b sign: 24 tấm
-- Biển Pedestrians: 27 tấm 
-- Biển No entry: 11 tấm
-- Biển Keep right: 8 tấm
-- Biển Roundabout mandatory: 6 tấm
-- SceneClass13: 156 tấm
+HOG hoạt động dựa trên việc đếm số lần xuất hiện của các gradient định hướng (hướng của sự thay đổi cường độ màu sắc) trong các vùng cục bộ của hình ảnh. Quá trình trích xuất đặc trưng HOG bao gồm các bước chính sau:
 
-### Xử lý dữ liệu
-Xử lý dữ liệu bao gồm các bước như sau:
-1.	Cắt vùng có chứa biển báo ra khỏi ảnh ban đầu bằng công cụ “Crop” trong Image trên Windows 10.
+- **Tính toán gradient:** Sử dụng bộ lọc Sobel để tính toán hướng và độ lớn của gradient tại mỗi pixel trong ảnh.
+- **Phân loại hướng:** Chia hình ảnh thành các ô (cell) nhỏ, thường là 8x8 pixel, và tính histogram của các gradient trong mỗi ô, với các hướng được chia thành các thùng (bin) dựa trên độ lớn của chúng.
+- **Chuẩn hóa khối:** Ghép các ô thành các khối (block) lớn hơn, thường là 2x2 ô, và chuẩn hóa các histogram để giảm thiểu ảnh hưởng của ánh sáng và độ tương phản.
+- **Tạo vector đặc trưng:** Kết hợp tất cả các vector đặc trưng của các khối trong toàn bộ hình ảnh thành một vector đặc trưng duy nhất.
+  
+**Lý do chọn HOG để trích xuất đặc trưng:**
 
-<img src='images/12.jpg'>
+- HOG sẽ trích xuất những đặc trưng của ảnh, từ đó giảm chiều dữ liệu, giảm thời thời gian tính toán và giảm độ phức tạp của mô hình.
+- HOG tập trung vào sự thay đổi cường độ (gradient) hơn là giá trị tuyệt đối của cường độ ánh sáng. Do đó, ngay cả khi ánh sáng yếu, các cạnh và đường viền trong ảnh vẫn tạo ra các gradient mà HOG có thể sử dụng để trích xuất đặc trưng. Từ đó giảm bớt các bước để tiền xử lý đối với những ảnh quá sáng hoặc quá tối.
 
-2.	Chuyển ảnh từ ảnh màu RGB sang ảnh xám.
+Tôi sẽ viết hàm trích xuất đặc trưng với đầu vào là đường dẫn ảnh:
 
-<img src='images/15.png'>
+```python
+def compute_hog(image_path):
+    try:
+        image = Image.open(image_path)
+        image = image.convert("L")
+        image = image.resize((128, 128))
 
-3.	Resize bức ảnh về chung một kích thước duy nhất là 64x64.
-4.	Sử dụng HOG để trích xuất đặc trưng cho bức ảnh. Ta sẽ được các vector 8100x1 để chuẩn bị cho bước training.
+        hog, _ = feature.hog(np.array(image), orientations=9, pixels_per_cell=(8, 8), cells_per_block=(2, 2),
+                             visualize=True, transform_sqrt=True, block_norm='L2-Hys')
+        return hog
+    except Exception as e:
+        logging.error(f"Lỗi khi xử lý ảnh {image_path}: {e}")
+        return None
+```
 
-### Chọn model và training
-Dùng model SVM và KNN để training. Model được import từ scikit-learn.
-Ở SVM cần quan tâm tới các hyperparameters như sau:
--	C: 0.01
--	Probability=true
--	Random_state=42
--	Kernel=”linear”
+Resize ảnh thành kích thước 128x128 pixels nhằm giúp cho đặc trưng ảnh thu được không quá ít, đồng thời cũng không tạo ra quá nhiều tham số giảm thời gian tải dữ liệu và huấn luyện mô hình.
 
-Gọi phương thức model.fit để thực hiện training. Sau khi training xong ta sẽ lưu model lại cho những lần dự đoán tiếp theo.
+### 2.2.2. Đọc dữ liệu và trích xuất đặc trưng
 
-### Dự đoán trên tập ảnh test
-- Ta sẽ đánh giá model của chúng ta bằng tập ảnh “Test”. 
-- Tập này bao gồm 20% số ảnh đã chụp được của các lớp. 
-- Tiến hành xử lý ảnh trên tập ảnh “Test” như ở tập training. Sau đó gọi phương thức model.predict ta được kết quả như sau:
+Để đọc và trích xuất đặc trưng từ dữ liệu tôi sử dụng đoạn code:
 
-#### SVM
+```python
+def load_data_from_csv(csv_file):
+    data = []
+    labels = []
 
-<img src='images/acc.jpg'>
+    with open(csv_file, 'r') as file:
+        lines = file.readlines()[1:]  # Bỏ qua dòng tiêu đề
+        for line in lines:
+            parts = line.strip().split(',')
+            image_path = parts[-1]
+            hog = compute_hog(image_path)
+            if hog is not None:
+                data.append(hog)
+                labels.append(int(parts[-2]))
+    return np.array(data), np.array(labels)
+    
+X_train, Y_train = load_data_from_csv("./data/Train.csv")
+```
 
-#### KNN
+Đặc trưng của mỗi ảnh được trích xuất ra từ tập training sẽ là một điểm dữ liệu trong một không gian đa chiều. Ở đây với ảnh được resize thành 128*128px thì số chiều của không gian này sẽ là:
 
-<img src='images/knn.jpg'>
+$$
+(\frac{128}{8}_{(cells)}-1).(\frac{128}{8}_{(cells)}-1).(9_{(bins)}.4_{(blocks)})=8100
+$$
 
-### Đánh giá mô hình
-#### Nhận xét: 
-- Ta có thể thấy hai mô hình đạt độ chính xác trên 90%. Sở dĩ đạt độ chính xác cao như vậy là vì những bức ảnh training và testing đã được pre-processing. Chỉ chừa mỗi phần có chứa biển báo. Tăng sáng và độ tương phản cho một số bức ảnh tối hay độ tương phản thấp.
-- Mô hình SVM đạt độ chính xác cao hơn vì: 
-  1. SVM hoạt động tốt với kiểu dữ liệu nhiều chiều. Trong bài này mỗi vector sau khi rút trích HOG đều là vector có số chiều rất lớn.
-  2. KNN sai nhiều ở hai loại biển báo thứ 2 và thứ 3. Đây là 2 loại biển báo khá tương đồng nhau. Vì vậy KNN khi predict nó sẽ đưa ra kết quả sau khi tính khoảng cách giữa các vector, điều đó dẫn tới việc sẽ có nhiều nhầm lẫn giữa 2 loại biển báo đó nên hiệu suất bị giảm đi đáng kể thay vì training như SVM.
-- Ở một số loại biển báo như biển báo W.207b và Pedestrians có độ chính xác thấp bởi vì chúng đề là những loại biển báo nguy hiểm có hình dạng là tam giác. Cho nên phần ROI chỉ chiếm một nửa bức ảnh(Các biển báo tròn chiếm 79% bức ảnh). Vậy nên các loại biển báo nguy hiểm chứa vùng nhiễu lớn hơn các loại biển báo tròn. Điều đó đã làm giảm hiệu suất khi chúng ta trích xuất HOG và training model bằng SVM.
-- Ở bước trượt cửa sổ để dự đoán biển báo. Có một số vấn đề như sau:
-  1.	Khi ta để bước nhảy của cửa sổ đó bé hơn hoặc bằng 8 và pyramid-scale<1.25 thì hầu hết những biển báo đều được phát hiện ra vị trí trong khung hình. Tuy nhiên chúng lại có nhược điểm là tốc độ phát hiện ra biển báo rất chậm. Ngược lại khi ta để bước nhảy lớn hơn 8 hoặc pyramid-scale > 1.25 thì bắt đầu có hiện tượng model không phát hiện ra vị trí biển báo. Nguyên nhân là do khi để bước nhảy lớn, cửa sổ của chúng ta có thể đã skip hoặc nhảy qua một phần vùng có chứa biển báo, hoặc với việc để pyramid-scale >1.25 thì kích thước ảnh giảm xuống đột ngột nên khi trích xuất HOG ở vùng đó để dự đoán thì kết quả dự đoán rơi vào nhãn -1 (Nhãn ngoại cảnh). Vậy sau quá trình thực nghiệm và điều chỉnh, thì nhóm em đã chọn window-step = 8 và pyramid-scale = 1.25.
-  2.	Trước khi dự đoán, vì ảnh input có khả năng là một bức ảnh có độ phân giải lớn, nên nếu ta tìm kiếm trên bức ảnh đó sẽ cho ra thời gian tìm kiếm lâu, vậy nên để giảm tối đa chi phí tìm kiếm, ta sẽ resize bức ảnh về kích thước nhỏ nhất là 400 cho chiều dài hoặc chiều rộng(giữa nguyên tỉ lệ ảnh).
-  3.	Mặc dù vậy thì thời gian tìm kiếm vẫn diễn ra trong thời gian lâu. Xấp xỉ 30s cho một bức ảnh. Đây là nhược điểm lớn nhất của mô hình.
----
-## Thử nghiệm trên những bức ảnh mới
-Thử test trên những bức ảnh chụp dọc đường hoặc một số hình ảnh trên mạng.
+```python
+array([0.21429373, 0.23669159, 0.23669159, ..., 0.01807657, 0.00958505, 0. ]) # Arr 1 chiều 8100 features như một điểm trong không gian đa chiều
+```
 
-<img src='images/pre_2.jpg'> <img src='images/pre_3.jpg'>
+### **2.2.3. Thống kê và xử lý dữ liệu không cân bằng**
 
-<img src='images/predict_1.jpg'> <img src='images/predict_2.jpg'>
+Số lượng nhãn chênh lệch là rất lớn, điều này sẽ làm phát sinh một số vấn đề:
 
-Tuy nhiên có nhiều trường hợp bị sai hoặc không tìm ra biển báo
+- **Hiệu suất không đồng đều:** Mô hình sẽ có xu hướng dự đoán nhãn có nhiều dữ liệu hơn. Điều này làm cho mô hình kém hiệu quả trong việc dự đoán nhãn có ít dữ liệu.
+- **Độ chính xác bị lệch:** Các chỉ số đánh giá như độ chính xác (accuracy) sẽ bị lệch nếu không có sự cân bằng giữa các nhãn. Mô hình có thể đạt độ chính xác cao đơn giản vì nó đoán đúng nhiều mẫu từ nhãn có nhiều dữ liệu.
 
-<img src='images/pre_5.jpg'> <img src='images/pre_4.jpg'>
+Vấn đề dữ liệu không cân bằng có thể được giải quyết với các mô hình Ensemble như Random Forest, tuy nhiên để có thể sử dụng mô hình SVM thì tôi sẽ cần phải sử dụng kỹ thuật Resampling bằng SMOTE của thư viện ‘imblearn’. SMOTE (Synthetic Minority Over-sampling) và ADASYN (Adaptive synthetic sampling) là các phương pháp sinh mẫu nhằm gia tăng kích thước mẫu của nhóm thiểu số trong trường hợp xảy ra mất cân bằng mẫu. Để gia tăng kích thước mẫu, với mỗi một mẫu thuộc nhóm thiểu số ta sẽ lựa chọn ra 𝑘 mẫu láng giềng gần nhất với nó và sau đó thực hiện tổ hợp tuyến tính để tạo ra mẫu giả lập:
 
-<img src='images/test_round_2.jpg'>
+```python
+from imblearn.over_sampling import SMOTE
 
-Nguyên nhân chính:
-- Vùng chứa biển báo quá nhỏ so với bức ảnh
-- Biển báo chưa có trong dataset bị nhận nhầm với những biển báo có trong tập training vì hình dáng khá giống nhau
-- Góc chụp nghiêng nhiều so với những bức ảnh mà model được training
+smote = SMOTE(sampling_strategy=sampling_strategy, random_state=42)
+X_train_resampled, y_train_resampled = smote.fit_resample(X_train, Y_train)
+```
 
----
-## Tài liệu tham khảo
-1. SVM: https://machinelearningcoban.com/2017/04/09/smv/
-2. HOG: https://viblo.asia/p/tim-hieu-ve-phuong-phap-mo-ta-dac-trung-hog-histogram-of-oriented-gradients-V3m5WAwxZO7
-3. Sliding window: https://www.pyimagesearch.com/2015/03/23/sliding-windows-for-object-detection-with-python-and-opencv/
-4. NMS: https://towardsdatascience.com/non-maximum-suppression-nms-93ce178e177c
-5. Object detection: Chapter 2 PyimageSearch Gurus - Adrian Rosebrock
-6. Dataset 13 Natural Scene Categories: http://vision.stanford.edu/resources_links.html
+Sau khi tính toán giá trị trung bình là khoảng 1000 dữ liệu trên mỗi nhãn, tôi tiến hành tạo thêm dữ liệu để các nhãn có số dữ liệu quá thấp đạt tới 1000 dữ liệu.
+
+![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/60572330-cc0e-4df9-8215-baf0ccfc4a7b/7523b9cc-267d-4716-83f4-dd1a58edb6e3/Untitled.png)
+
+Kết quả cho thấy hàm đã hoạt động tốt và cho ra tập dữ liệu khá cân bằng.
+
+### 2.2.4. Chia tập dữ liệu
+
+Tiếp theo để có thể đánh giá và tối ưu hóa mô hình tôi sẽ tiến hành chia tập dữ liệu thành 3 phần train - val - test với tỉ lệ 70% - 10% - 15%
+
+```python
+from sklearn.model_selection import train_test_split
+
+x_train, x_remaining, y_train, y_remaining = train_test_split(X_train_resampled, y_train_resampled, test_size=0.25, random_state=42)
+x_test, x_val, y_test, y_val = train_test_split(x_remaining, y_remaining, test_size=0.4, random_state=42)
+```
+
+Dữ liệu đã sẵn sàng, tôi sẽ tiến tới bước training model!!!
+
+# 3. Training và đánh giá mô hình
+
+## 3.1. Chọn base model để training
+
+Những model được tôi sử dụng trong bài toán này sẽ là Support Vector Machine(SVM), K-Nearest Neighbor(KNN) và Random Forest(RF)
+
+### **3.1.1. Support Vector Machine (SVM)**:
+
+- SVM là một lựa chọn phổ biến khi làm việc với dữ liệu có số lượng lớn các đặc trưng, như trong trường hợp của HOG.
+- SVM hoạt động tốt khi dữ liệu là tuyến tính hoặc có thể chuyển đổi thành tuyến tính thông qua các hàm kernel.
+- SVM có thể được điều chỉnh bằng cách thay đổi siêu tham số như C (tham số đòi hỏi mạnh mẽ) và kernel để đạt được hiệu suất tốt nhất.
+
+### 3.1.2. Random Forest:
+
+- Random Forest là một phương pháp học máy ensemble dựa trên cây quyết định.
+- Đối với dữ liệu HOG, Random Forest có thể được sử dụng để xây dựng một tập hợp các cây quyết định để phân loại ảnh.
+- Đặc điểm của Random Forest là không nhạy cảm với overfitting và có khả năng làm việc tốt với dữ liệu có nhiễu.
+
+### 3.1.3. **K-Nearest Neighbors (KNN)**:
+
+- KNN là một phương pháp học máy đơn giản nhưng mạnh mẽ trong việc phân loại dữ liệu.
+- KNN hoạt động bằng cách xác định nhãn cho một điểm dữ liệu mới bằng cách so sánh nó với các điểm dữ liệu trong tập huấn luyện gần nhất (K điểm gần nhất).
+- HOG có thể được sử dụng như là đặc trưng đầu vào cho mỗi điểm dữ liệu.
+- KNN không cần huấn luyện trước và có thể áp dụng trực tiếp vào dữ liệu mới mà không cần phải tái huấn luyện toàn bộ mô hình.
+
+→ Tuy nhiên, KNN có thể đòi hỏi nhiều tài nguyên tính toán khi số lượng điểm dữ liệu trong tập huấn luyện lớn.
+
+## 3.2. Đánh giá các base model
+
+### 3.2.1. **Đánh giá mô hình SVM**
+
+```python
+Đánh giá mô hình SVM trên dữ liệu validation:
+Accuracy: 0.9451306413301662
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.90      0.90      0.90        60
+           1       0.93      0.91      0.92       720
+           2       0.90      0.96      0.93       750
+           3       0.89      0.85      0.87       450
+           4       0.97      0.97      0.97       660
+           5       0.84      0.88      0.86       630
+           6       0.99      0.79      0.88       150
+           7       0.91      0.93      0.92       450
+           8       0.91      0.87      0.89       450
+           9       0.99      0.97      0.98       480
+          10       0.96      0.98      0.97       660
+          11       0.95      0.94      0.95       420
+          12       0.99      1.00      0.99       690
+          13       1.00      1.00      1.00       720
+          14       0.98      0.99      0.98       270
+          15       0.95      1.00      0.97       210
+          16       0.97      0.97      0.97       150
+          17       1.00      1.00      1.00       360
+          18       0.99      0.93      0.96       390
+          19       0.92      1.00      0.96        60
+          20       0.87      0.91      0.89        90
+```
+
+```python
+          21       0.93      0.83      0.88        90
+          22       0.93      0.80      0.86       120
+          23       0.92      0.85      0.89       150
+          24       0.95      0.99      0.97        90
+          25       0.92      0.96      0.94       480
+          26       0.92      0.82      0.87       180
+          27       1.00      1.00      1.00        60
+          28       0.94      0.96      0.95       150
+          29       0.79      0.93      0.85        90
+          30       0.80      0.77      0.78       150
+          31       0.92      0.99      0.95       270
+          32       1.00      0.92      0.96        60
+          33       0.97      1.00      0.98       210
+          34       0.97      0.99      0.98       120
+          35       0.98      0.98      0.98       390
+          36       0.98      0.98      0.98       120
+          37       1.00      0.95      0.97        60
+          38       0.99      0.99      0.99       690
+          39       0.98      1.00      0.99        90
+          40       0.96      0.98      0.97        90
+          41       0.91      0.83      0.87        60
+          42       0.99      0.88      0.93        90
+
+    accuracy                           0.95     12630
+   macro avg       0.94      0.93      0.94     12630
+weighted avg       0.95      0.95      0.94     12630
+```
+
+Trong báo cáo phân loại của mô hình SVM, chúng ta thấy rằng precision, recall và f1-score đều cao cho hầu hết các lớp. Điều này cho thấy mô hình SVM có khả năng phân loại tốt trên cả các lớp lớn và nhỏ. Precision và recall gần như đều cao cho tất cả các lớp, chỉ có một số lớp có một vài điểm số thấp hơn, nhưng vẫn đạt được hiệu suất tốt (ví dụ: lớp 6, lớp 21, lớp 22).
+
+Sở dĩ mô hình SVM đạt được độ chính xác xao như vậy là vì mô hình này đặc biệt hoạt động tốt trên các tập dữ liệu nhiều chiều như đặc trưng HOG.
+
+### 3.2.2. **Đánh giá mô hình Random Forest**
+
+```python
+Đánh giá mô hình Random Forest trên dữ liệu validation:
+Accuracy: 0.9346793349168646
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       1.00      0.97      0.98        60
+           1       0.95      0.87      0.91       720
+           2       0.86      0.97      0.91       750
+           3       0.97      0.84      0.90       450
+           4       0.95      0.95      0.95       660
+           5       0.82      0.90      0.86       630
+           6       0.93      0.75      0.83       150
+           7       0.89      0.92      0.91       450
+           8       0.87      0.80      0.83       450
+           9       0.96      0.97      0.97       480
+          10       0.93      0.97      0.95       660
+          11       0.91      0.96      0.93       420
+          12       0.98      1.00      0.99       690
+          13       1.00      1.00      1.00       720
+          14       1.00      0.96      0.98       270
+          15       0.98      0.99      0.98       210
+          16       0.99      0.97      0.98       150
+          17       0.99      0.99      0.99       360
+          18       0.97      0.88      0.93       390
+          19       0.97      1.00      0.98        60
+          20       0.90      0.91      0.91        90
+```
+
+```python
+          21       0.98      0.63      0.77        90
+          22       0.99      0.84      0.91       120
+          23       0.93      0.95      0.94       150
+          24       1.00      0.98      0.99        90
+          25       0.90      0.96      0.93       480
+          26       0.82      0.77      0.80       180
+          27       0.98      0.90      0.94        60
+          28       0.94      0.95      0.94       150
+          29       0.95      0.90      0.93        90
+          30       0.90      0.79      0.84       150
+          31       0.90      0.98      0.94       270
+          32       0.94      0.82      0.88        60
+          33       0.96      1.00      0.98       210
+          34       0.99      0.99      0.99       120
+          35       0.96      0.98      0.97       390
+          36       0.98      0.98      0.98       120
+          37       0.98      0.90      0.94        60
+          38       0.96      0.99      0.98       690
+          39       0.99      1.00      0.99        90
+          40       0.94      0.84      0.89        90
+          41       0.85      0.87      0.86        60
+          42       0.97      0.78      0.86        90
+
+    accuracy                           0.93     12630
+   macro avg       0.94      0.92      0.93     12630
+weighted avg       0.94      0.93      0.93     12630
+```
+
+Bảng đánh giá cho thấy mô hình có hiệu suất tốt trên hầu hết các lớp, với precision, recall và F1-score đều ổn định. Random Forest hoạt động tốt trên dữ liệu HOG vì khả năng xử lý không gian đặc trưng lớn, dễ dàng ánh xạ các mẫu dữ liệu và không bị ảnh hưởng bởi biến đổi không quan trọng của dữ liệu.
+
+### 3.2.3. **Đánh giá mô hình KNN**
+
+```python
+Đánh giá mô hình KNN trên dữ liệu validation:
+Accuracy: 0.66270783847981
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.09      0.97      0.16        60
+           1       0.87      0.41      0.55       720
+           2       0.93      0.57      0.71       750
+           3       0.67      0.46      0.54       450
+           4       0.94      0.74      0.83       660
+           5       0.53      0.67      0.59       630
+           6       0.74      0.73      0.73       150
+           7       0.84      0.68      0.75       450
+           8       0.70      0.76      0.73       450
+           9       0.95      0.45      0.61       480
+          10       0.86      0.70      0.77       660
+          11       1.00      0.08      0.15       420
+          12       1.00      0.97      0.98       690
+          13       1.00      0.99      1.00       720
+          14       0.98      0.93      0.95       270
+          15       0.30      0.99      0.46       210
+          16       0.36      0.99      0.53       150
+          17       1.00      0.71      0.83       360
+          18       0.96      0.17      0.29       390
+          19       0.24      0.98      0.38        60
+          20       0.43      0.89      0.58        90
+```
+
+```python
+          21       0.47      0.72      0.57        90
+          22       0.39      0.78      0.53       120
+          23       0.37      0.56      0.44       150
+          24       0.27      0.86      0.42        90
+          25       0.99      0.26      0.41       480
+          26       0.38      0.58      0.46       180
+          27       0.32      1.00      0.49        60
+          28       0.38      0.50      0.43       150
+          29       0.35      0.73      0.47        90
+          30       0.26      0.34      0.30       150
+          31       0.84      0.86      0.85       270
+          32       0.73      0.93      0.82        60
+          33       0.94      0.88      0.91       210
+          34       0.49      0.98      0.65       120
+          35       1.00      0.66      0.79       390
+          36       0.78      1.00      0.88       120
+          37       0.76      0.92      0.83        60
+          38       1.00      0.66      0.79       690
+          39       0.96      0.97      0.96        90
+          40       0.52      0.90      0.66        90
+          41       0.38      0.62      0.47        60
+          42       0.54      0.88      0.67        90
+
+    accuracy                           0.66     12630
+   macro avg       0.66      0.73      0.63     12630
+weighted avg       0.81      0.66      0.68     12630
+```
+
+- Tại biển báo nhãn 0 (Speed Limit 20) có chỉ số precision rất thấp (9%) điều này xảy ra là do hầu hết các biển báo speed limit có hình dáng khá tương đồng, chỉ thay đổi mỗi con số ở trong biển báo. Việc sử dụng HOG trích xuất đặc trưng ảnh với tỉ lệ ảnh là 128*128px cũng sẽ làm cho những con số trong biển báo trở nên khó phân biệt hơn với mô hình KNN, chính vì vậy mà tỉ lệ precision của biển nhãn 0 rất thấp và tỉ lệ recall lại cao hơn so với các biển speed limit khác (từ 1 - 8). Ngoài ra số support cũng thấp hơn so với các biển còn lại cũng dẫn đến việc chỉ số recall cao.
+- Điều này cũng xảy ra tương tự với biển số 11 và biển số 27 khi hình dáng khá tương tự nhau:
+
+![Những ảnh có hình dáng tương tự nhau sẽ gây ra sự nhầm lẫn lớn đối với mô hình KNN](https://prod-files-secure.s3.us-west-2.amazonaws.com/60572330-cc0e-4df9-8215-baf0ccfc4a7b/2b94ca9a-828f-463c-9b15-d20172e470a5/explain_results-06.png)
+
+Những ảnh có hình dáng tương tự nhau sẽ gây ra sự nhầm lẫn lớn đối với mô hình KNN
+
+Nhìn chung việc sử dụng mô hình KNN để đánh giá với các tập dữ liệu lớn và có độ phức tạp cao về cả dữ liệu và không gian đặc trưng sẽ đem lại hiệu quả rất kém. Với không gian với 8100 chiều thì các mẫu sẽ trở nên xa nhau trong không gian đặc trưng, làm cho việc tìm láng giềng gần nhất trở nên khó khăn và không chính xác.
+
+## 3.3. Tối ưu model
+
+Sau quá trình đánh giá thì tôi đã quyết định chọn 2 model để tiến hành stacking sử dụng Logistic Regrestion để chọn kết quả tốt nhất. Trước đó tôi sẽ tiến hành tối ưu model SVM sử dụng phương pháp Grid Search:
+
+### 3.3.1. Tối ưu model SVM
+
+```python
+from sklearn.model_selection import GridSearchCV
+import matplotlib.pyplot as plt
+
+# Danh sách các giá trị của siêu tham số cần điều chỉnh
+param_grid = {'C': [0.01, 0.03, 0.05, 0.07, 0.1]}
+
+# Tạo GridSearchCV với mô hình SVM và siêu tham số đã cho
+grid_search = GridSearchCV(estimator=model_svm, param_grid=param_grid, cv=5)
+
+# Huấn luyện GridSearchCV trên dữ liệu
+grid_search.fit(x_train, y_train)
+
+# Lấy kết quả của Grid Search
+results = grid_search.cv_results_
+```
+
+Tôi sẽ sử dụng Grid Search để tìm kiếm siêu tham số tối ưu cho mô hình SVM. Cụ thể, chúng ta đã xác định một danh sách các giá trị cho tham số "C", đây là tham số quan trọng trong SVM.
+
+Sau đó, tôi sử dụng GridSearchCV để thử tất cả các giá trị trong danh sách đó và đánh giá hiệu suất của mô hình SVM với mỗi giá trị của "C" trên tập dữ liệu huấn luyện. Bằng cách này, tôi có thể tìm ra giá trị tối ưu cho "C" mà cải thiện hiệu suất của mô hình.
+
+![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/60572330-cc0e-4df9-8215-baf0ccfc4a7b/983ec35e-781d-4cb3-9359-bc1ce3448b9a/Untitled.png)
+
+Sau khi thử với các giá trị C khác nhau từ $10^{-3}$ cho đến 10 thì giá trị tốt nhất là 0.01 và tôi tiếp tục thu hẹp phạm vi và nhận thấy giá trị C mặc định vẫn là 0.01 sẽ cho ra độ chính xác cao nhất.
+
+Vì thế tôi sẽ giữ nguyên siêu tham số này để tiến hành stacking
+
+### 3.3.2. Training cho **meta-model**
+
+Quy trình:
+
+![STACK-06.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/60572330-cc0e-4df9-8215-baf0ccfc4a7b/c1c73a5f-30cf-4447-b94d-3c4f35a759a9/STACK-06.png)
+
+Do tài nguyên của máy tôi không đủ để thực hiện gridsearch tìm siêu tham số tối ưu nhất với mô hình Random Forest nên tôi sẽ tiến hành luôn bước huấn luyện cho meta model
+
+```python
+model_svm = SVC(probability=True)
+model_rf = RandomForestClassifier()
+model_svm.fit(x_train, y_train) # Giữ nguyên siêu tham số mặc định
+model_rf.fit(x_train, y_train)
+svm_test_prob = model_svm.predict_proba(x_test)
+rf_test_prob = model_rf.predict_proba(x_test)
+```
+
+Đầu tiên tôi khởi tạo 2 mô hình cơ sở hiệu quả nhất trong 3 mô hình tôi đã đánh giá trước đó. Sau đó tạo mô một ma trận đặc trưng làm đầu vào huấn luyện cho meta-model:
+
+```python
+# Kết hợp xác suất dự đoán để tạo thành ma trận đặc trưng đầu vào cho mô hình tổng hợp
+train_stacked_features = np.hstack((svm_train_prob, rf_train_prob))
+test_stacked_features = np.hstack((svm_test_prob, rf_test_prob))
+# Huấn luyện mô hình tổng hợp (Logistic Regression) trên tập huấn luyện
+stacked_model = LogisticRegression()
+stacked_model.fit(train_stacked_features, y_train)
+```
+
+## 3.4. Đánh giá meta-model
+
+### 3.4.1. Accuracy
+
+```python
+Accuracy of svm model: 0.942596991290578
+Accuracy of random forest model: 0.9338875692794932
+Accuracy of stacked model: 0.9451702296120348
+```
+
+Có thể thấy bằng 
+
+# 4. Hướng phát triển và cải tiến
+
+## **4.1. Cải tiến trong tương lai**
+
+**Về data:**
+
+- Bổ sung đa dạng các loại biển báo khác, đặc biệt là biển báo giao thông Việt Nam
+- Tìm hiểu thêm các kĩ thuật tăng cường data. Việc áp dụng không hiệu quả các kĩ thuật tăng cường dữ liệu trong dự án này càng cho thấy tuy số lượng dữ liệu quan trọng nhưng chất lượng dữ liệu cũng là một yếu tố ảnh hưởng mạnh mẽ tới độ chính xác model.
+- Việc sử dụng thư viện SMOTE để tăng cường dữ liệu ảnh sau đó chia thành 3 tập có thể làm cho dữ liệu bị overfitting làm giảm hiệu quả đánh giá. Chúng tôi sẽ tìm hiểu thêm những cách khác để tăng cường dữ liệu, tuy số lượng dữ liệu quan trọng nhưng chất lượng dữ liệu cũng là một yếu tố ảnh hưởng mạnh mẽ tới độ chính xác model.
+
+**Về thuật toán:** 
+
+- Áp dụng các kỹ thuật Ensemble khác thay vì chỉ sử dụng Stacking
+- Tăng số lượng base model để tăng độ nhận diện của meta-model
+- Tìm kiếm các siêu tham số hiệu quả hơn khi có đủ điều kiện
+
+## 4.2. Hướng phát triển
+
+- Thu thập thêm các ảnh có ngoại cảnh và thực hiện label bằng tay sử dụng **bounding box.**
+- Nhận diện biển báo trong thời gian thực và trả về đầu ra dưới dạng âm thanh cho người dùng.
+- Nhận biết được biển báo và phân loại được chính xác loại biển báo.
+
+# 5. Video demo
+
+Youtube link
+
+# 6. Nguồn tham khảo
+
+1. Data set: [GTSRB - German Traffic Sign Recognition Benchmark (kaggle.com)](https://www.kaggle.com/datasets/meowmeowmeowmeowmeow/gtsrb-german-traffic-sign)
+2. HOG: https://viblo.asia/p/tim-hieu-ve-phuong-phap-mo-ta-dac-trung-hog-histogram-of-oriented-gradients-V3m5WAwxZO7
+3. Mất cân bằng dữ liệu: [Khoa học dữ liệu (phamdinhkhanh.github.io)](https://phamdinhkhanh.github.io/2020/02/17/ImbalancedData.html)
+4. GridSearchCV: [Tự học ML | Điều chỉnh siêu tham số SVM bằng GridSearchCV | ML » Cafedev.vn](https://cafedev.vn/tu-hoc-ml-dieu-chinh-sieu-tham-so-svm-bang-gridsearchcv-ml/)
+5. SVM: https://machinelearningcoban.com/2017/04/09/smv/
