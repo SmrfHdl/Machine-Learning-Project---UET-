@@ -7,7 +7,7 @@ from skimage import feature
 import numpy as np
 #load the trained model to classify sign
 from joblib import load
-model = load('svm_model_2.pkl')
+model = load('svm_model.pkl')
 
 #dictionary to label all traffic signs class.
 classes = { 1:'Speed limit (20km/h)',

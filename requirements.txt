@@ -3,3 +3,4 @@ numpy==1.24.4
 Pillow==10.3.0
 scikit-image == 0.21.0
 pytk == 0.0.2.1
+scikit-learn == 1.4.2

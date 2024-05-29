@@ -1,4 +1,10 @@
-FROM python:3.8-slim-buster
+FROM python:3.9-slim-buster
+
+RUN apt-get update && apt-get install -y \
+    tk \
+    tcl \
+    libtk8.6 \
+    libx11-6
 
 WORKDIR /app 
 

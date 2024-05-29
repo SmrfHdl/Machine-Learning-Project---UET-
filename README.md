@@ -221,7 +221,7 @@ Accuracy of stacked model: 0.9451702296120348
 
 # 5. Video demo
 
-Youtube link
+[Youtube link](https://www.youtube.com/watch?v=SwBjnw4IXLg)
 
 # 6. Nguồn tham khảo
 
