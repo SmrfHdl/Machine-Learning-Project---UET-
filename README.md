@@ -1,21 +1,22 @@
 # **Thông Tin Dự Án**
 
 > **Tên Dự Án**: Nhận diện biển báo giao thông
-> 
-**Tên nhóm:** Hội người cao tuổi
+>
+> **Tên nhóm:** Hội người cao tuổi
 
 **Ngày thực hiện:** 14/05/2024
-> 
+
+>
 
 **Repostories Github:** https://github.com/SmrfHdl/Machine-Learning-Project---UET-.git
 
 # **Các thành viên của nhóm:**
 
-| Họ tên | MSSV |
-| --- | --- |
+| Họ tên                       | MSSV     |
+| ---------------------------- | -------- |
 | Nguyễn Viết Vũ (Trưởng nhóm) | 22022632 |
-| Phạm Văn Trường | 22022564 |
-| Trần An Thắng | 22022525 |
+| Phạm Văn Trường              | 22022564 |
+| Trần An Thắng                | 22022525 |
 
 </aside>
 
@@ -40,20 +41,20 @@ Bộ dữ liệu German Traffic Sign (GTSRB) là một bộ dữ liệu chứa h
 
 Bộ dữ liệu này gồm khoảng gần 40k ảnh chia thành 43 folder là 43 loại biển báo khác nhau. Mỗi folder sẽ có 1 file CSV chứa thông tin các ảnh trong thư mục.
 
-| Nhãn | Biển tương ứng | Nhãn | Biển tương ứng | Nhãn | Biển tương ứng | Nhãn | Biển tương ứng |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| 0 | Speed limit (20km/h) | 12 | Priority road | 24 | Road narrows on the right | 36 | Go straight or right |
-| 1 | Speed limit (30km/h) | 13 | Yield | 25 | Road work | 37 | Go straight or left |
-| 2 | Speed limit (50km/h) | 14 | Stop | 26 | Traffic signals | 38 | Keep right |
-| 3 | Speed limit (60km/h) | 15 | No vehicles | 27 | Pedestrians | 39 | Keep left |
-| 4 | Speed limit (70km/h) | 16 | Veh > 3.5 tons prohibited | 28 | Children crossing | 40 | Roundabout mandatory |
-| 5 | Speed limit (80km/h) | 17 | No Entry | 29 | Bicycles crossing | 41 | End of no passing |
-| 6 | End of speed limit (80km/h) | 18 | General caution | 30 | Beware of ice/snow | 42 | End no passing veh > 3.5 tons |
-| 7 | Speed limit (100km/h) | 19 | Dangerous curve left | 31 | Wild animals crossing |  |  |
-| 8 | Speed limit (120km/h) | 20 | Dangerous curve right | 32 | End speed + passing limits |  |  |
-| 9 | No passing | 21 | Double curve | 33 | Turn right ahead |  |  |
-| 10 | No passing veh over 3.5 tons | 22 | Bumpy road | 34 | Turn left ahead |  |  |
-| 11 | Right-of-way at intersection | 23 | Slippery road | 35 | Ahead only |  |  |
+| Nhãn | Biển tương ứng               | Nhãn | Biển tương ứng            | Nhãn | Biển tương ứng             | Nhãn | Biển tương ứng                |
+| ---- | ---------------------------- | ---- | ------------------------- | ---- | -------------------------- | ---- | ----------------------------- |
+| 0    | Speed limit (20km/h)         | 12   | Priority road             | 24   | Road narrows on the right  | 36   | Go straight or right          |
+| 1    | Speed limit (30km/h)         | 13   | Yield                     | 25   | Road work                  | 37   | Go straight or left           |
+| 2    | Speed limit (50km/h)         | 14   | Stop                      | 26   | Traffic signals            | 38   | Keep right                    |
+| 3    | Speed limit (60km/h)         | 15   | No vehicles               | 27   | Pedestrians                | 39   | Keep left                     |
+| 4    | Speed limit (70km/h)         | 16   | Veh > 3.5 tons prohibited | 28   | Children crossing          | 40   | Roundabout mandatory          |
+| 5    | Speed limit (80km/h)         | 17   | No Entry                  | 29   | Bicycles crossing          | 41   | End of no passing             |
+| 6    | End of speed limit (80km/h)  | 18   | General caution           | 30   | Beware of ice/snow         | 42   | End no passing veh > 3.5 tons |
+| 7    | Speed limit (100km/h)        | 19   | Dangerous curve left      | 31   | Wild animals crossing      |      |                               |
+| 8    | Speed limit (120km/h)        | 20   | Dangerous curve right     | 32   | End speed + passing limits |      |                               |
+| 9    | No passing                   | 21   | Double curve              | 33   | Turn right ahead           |      |                               |
+| 10   | No passing veh over 3.5 tons | 22   | Bumpy road                | 34   | Turn left ahead            |      |                               |
+| 11   | Right-of-way at intersection | 23   | Slippery road             | 35   | Ahead only                 |      |                               |
 
 Dưới đây là một số thông tin chi tiết về bộ dữ liệu GTSRB:
 
@@ -64,7 +65,7 @@ Dưới đây là một số thông tin chi tiết về bộ dữ liệu GTSRB:
 
 ## 2.2. Đọc và xử lý dữ liệu
 
-Bởi vì tập dữ liệu ở dạng ảnh, không thể trực tiếp đưa vào model để tiến hành trainning, vì vậy tôi cần phải trích xuất những đặc trưng của ảnh. Và kỹ thuật  được sử dụng ở đây là HOG (Histograms of Oriented Gradients)
+Bởi vì tập dữ liệu ở dạng ảnh, không thể trực tiếp đưa vào model để tiến hành trainning, vì vậy tôi cần phải trích xuất những đặc trưng của ảnh. Và kỹ thuật được sử dụng ở đây là HOG (Histograms of Oriented Gradients)
 
 ### 2.2.1. HOG (Histograms of Oriented Gradients)
 
@@ -80,7 +81,7 @@ HOG hoạt động dựa trên việc đếm số lần xuất hiện của các
 - **Phân loại hướng:** Chia hình ảnh thành các ô (cell) nhỏ, thường là 8x8 pixel, và tính histogram của các gradient trong mỗi ô, với các hướng được chia thành các thùng (bin) dựa trên độ lớn của chúng.
 - **Chuẩn hóa khối:** Ghép các ô thành các khối (block) lớn hơn, thường là 2x2 ô, và chuẩn hóa các histogram để giảm thiểu ảnh hưởng của ánh sáng và độ tương phản.
 - **Tạo vector đặc trưng:** Kết hợp tất cả các vector đặc trưng của các khối trong toàn bộ hình ảnh thành một vector đặc trưng duy nhất.
-  
+
 **Lý do chọn HOG để trích xuất đặc trưng:**
 
 - HOG sẽ trích xuất những đặc trưng của ảnh, từ đó giảm chiều dữ liệu, giảm thời thời gian tính toán và giảm độ phức tạp của mô hình.
@@ -124,11 +125,11 @@ def load_data_from_csv(csv_file):
                 data.append(hog)
                 labels.append(int(parts[-2]))
     return np.array(data), np.array(labels)
-    
+
 X_train, Y_train = load_data_from_csv("./data/Train.csv")
 ```
 
-Đặc trưng của mỗi ảnh được trích xuất ra từ tập training sẽ là một điểm dữ liệu trong một không gian đa chiều. Ở đây với ảnh được resize thành 128*128px thì số chiều của không gian này sẽ là:
+Đặc trưng của mỗi ảnh được trích xuất ra từ tập training sẽ là một điểm dữ liệu trong một không gian đa chiều. Ở đây với ảnh được resize thành 128\*128px thì số chiều của không gian này sẽ là:
 
 $$
 (\frac{128}{8}_{(cells)}-1).(\frac{128}{8}_{(cells)}-1).(9_{(bins)}.4_{(blocks)})=8100
@@ -155,8 +156,6 @@ X_train_resampled, y_train_resampled = smote.fit_resample(X_train, Y_train)
 ```
 
 Sau khi tính toán giá trị trung bình là khoảng 1000 dữ liệu trên mỗi nhãn, tôi tiến hành tạo thêm dữ liệu để các nhãn có số dữ liệu quá thấp đạt tới 1000 dữ liệu.
-
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/60572330-cc0e-4df9-8215-baf0ccfc4a7b/7523b9cc-267d-4716-83f4-dd1a58edb6e3/Untitled.png)
 
 Kết quả cho thấy hàm đã hoạt động tốt và cho ra tập dữ liệu khá cân bằng.
 
@@ -388,10 +387,8 @@ Classification Report:
 weighted avg       0.81      0.66      0.68     12630
 ```
 
-- Tại biển báo nhãn 0 (Speed Limit 20) có chỉ số precision rất thấp (9%) điều này xảy ra là do hầu hết các biển báo speed limit có hình dáng khá tương đồng, chỉ thay đổi mỗi con số ở trong biển báo. Việc sử dụng HOG trích xuất đặc trưng ảnh với tỉ lệ ảnh là 128*128px cũng sẽ làm cho những con số trong biển báo trở nên khó phân biệt hơn với mô hình KNN, chính vì vậy mà tỉ lệ precision của biển nhãn 0 rất thấp và tỉ lệ recall lại cao hơn so với các biển speed limit khác (từ 1 - 8). Ngoài ra số support cũng thấp hơn so với các biển còn lại cũng dẫn đến việc chỉ số recall cao.
+- Tại biển báo nhãn 0 (Speed Limit 20) có chỉ số precision rất thấp (9%) điều này xảy ra là do hầu hết các biển báo speed limit có hình dáng khá tương đồng, chỉ thay đổi mỗi con số ở trong biển báo. Việc sử dụng HOG trích xuất đặc trưng ảnh với tỉ lệ ảnh là 128\*128px cũng sẽ làm cho những con số trong biển báo trở nên khó phân biệt hơn với mô hình KNN, chính vì vậy mà tỉ lệ precision của biển nhãn 0 rất thấp và tỉ lệ recall lại cao hơn so với các biển speed limit khác (từ 1 - 8). Ngoài ra số support cũng thấp hơn so với các biển còn lại cũng dẫn đến việc chỉ số recall cao.
 - Điều này cũng xảy ra tương tự với biển số 11 và biển số 27 khi hình dáng khá tương tự nhau:
-
-![Những ảnh có hình dáng tương tự nhau sẽ gây ra sự nhầm lẫn lớn đối với mô hình KNN](https://prod-files-secure.s3.us-west-2.amazonaws.com/60572330-cc0e-4df9-8215-baf0ccfc4a7b/2b94ca9a-828f-463c-9b15-d20172e470a5/explain_results-06.png)
 
 Những ảnh có hình dáng tương tự nhau sẽ gây ra sự nhầm lẫn lớn đối với mô hình KNN
 
@@ -424,8 +421,6 @@ Tôi sẽ sử dụng Grid Search để tìm kiếm siêu tham số tối ưu ch
 
 Sau đó, tôi sử dụng GridSearchCV để thử tất cả các giá trị trong danh sách đó và đánh giá hiệu suất của mô hình SVM với mỗi giá trị của "C" trên tập dữ liệu huấn luyện. Bằng cách này, tôi có thể tìm ra giá trị tối ưu cho "C" mà cải thiện hiệu suất của mô hình.
 
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/60572330-cc0e-4df9-8215-baf0ccfc4a7b/983ec35e-781d-4cb3-9359-bc1ce3448b9a/Untitled.png)
-
 Sau khi thử với các giá trị C khác nhau từ $10^{-3}$ cho đến 10 thì giá trị tốt nhất là 0.01 và tôi tiếp tục thu hẹp phạm vi và nhận thấy giá trị C mặc định vẫn là 0.01 sẽ cho ra độ chính xác cao nhất.
 
 Vì thế tôi sẽ giữ nguyên siêu tham số này để tiến hành stacking
@@ -433,8 +428,6 @@ Vì thế tôi sẽ giữ nguyên siêu tham số này để tiến hành stacki
 ### 3.3.2. Training cho **meta-model**
 
 Quy trình:
-
-![STACK-06.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/60572330-cc0e-4df9-8215-baf0ccfc4a7b/c1c73a5f-30cf-4447-b94d-3c4f35a759a9/STACK-06.png)
 
 Do tài nguyên của máy tôi không đủ để thực hiện gridsearch tìm siêu tham số tối ưu nhất với mô hình Random Forest nên tôi sẽ tiến hành luôn bước huấn luyện cho meta model
 
@@ -468,7 +461,7 @@ Accuracy of random forest model: 0.9338875692794932
 Accuracy of stacked model: 0.9451702296120348
 ```
 
-Có thể thấy bằng 
+Có thể thấy bằng
 
 # 4. Hướng phát triển và cải tiến
 
@@ -480,7 +473,7 @@ Có thể thấy bằng
 - Tìm hiểu thêm các kĩ thuật tăng cường data. Việc áp dụng không hiệu quả các kĩ thuật tăng cường dữ liệu trong dự án này càng cho thấy tuy số lượng dữ liệu quan trọng nhưng chất lượng dữ liệu cũng là một yếu tố ảnh hưởng mạnh mẽ tới độ chính xác model.
 - Việc sử dụng thư viện SMOTE để tăng cường dữ liệu ảnh sau đó chia thành 3 tập có thể làm cho dữ liệu bị overfitting làm giảm hiệu quả đánh giá. Chúng tôi sẽ tìm hiểu thêm những cách khác để tăng cường dữ liệu, tuy số lượng dữ liệu quan trọng nhưng chất lượng dữ liệu cũng là một yếu tố ảnh hưởng mạnh mẽ tới độ chính xác model.
 
-**Về thuật toán:** 
+**Về thuật toán:**
 
 - Áp dụng các kỹ thuật Ensemble khác thay vì chỉ sử dụng Stacking
 - Tăng số lượng base model để tăng độ nhận diện của meta-model
